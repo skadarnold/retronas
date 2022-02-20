@@ -15,6 +15,7 @@
     - create_user: "useradd -m -s /bin/bash {{ my_user }}"
     - working_dir: "/home/{{ my_user }}/"
     - my_command: "{{ working_dir }}/{{ my_file }}.sh"
+    - my_volume: "/boot/roms"
 
   tasks:
 

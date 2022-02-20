@@ -19,6 +19,7 @@ EXPOSE {{ my_ports }}
 COPY {{ my_file }}.sh {{ working_dir }}/
 RUN chown {{ my_user }}:{{ my_user }} {{ working_dir }}/{{ my_file }}.sh
 
+VOLUME {{ my_volume }}
 
 ### drop priv
 USER {{ my_user }}

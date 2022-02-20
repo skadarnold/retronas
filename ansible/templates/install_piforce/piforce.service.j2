@@ -7,7 +7,7 @@ Requires=docker.service
 Type=simple
 RestartSec=2
 Restart=always
-ExecStart=/usr/bin/docker run --rm --name {{ my_service }} {{ my_service }}:retronas
+ExecStart=/usr/bin/docker run --rm --volume {{ retronas_path }}/roms:{{ my_volume }} --name {{ my_service }} {{ my_service }}:retronas
 ExecStop=/usr/bin/docker stop {{ my_service }}
 
 [Install]

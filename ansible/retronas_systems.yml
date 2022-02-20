@@ -145,6 +145,7 @@ system_sega:
   - { src: "sega/megacd", mister: "MegaCD", retropie: "", batocera: "", recalbox: "", retroarch: "", ops2l: "", ps3netsrv: "" }
   - { src: "sega/megadrive", mister: "Genesis", retropie: "", batocera: "", recalbox: "", retroarch: "", ops2l: "", ps3netsrv: "" }
   - { src: "sega/saturn", mister: "Saturn", retropie: "", batocera: "", recalbox: "", retroarch: "", ops2l: "", ps3netsrv: "" }
+  - { src: "sega/naomi", mister: "Saturn", retropie: "", batocera: "", recalbox: "", retroarch: "", ops2l: "", ps3netsrv: "" }
 system_sharp:
   - { src: "sharp/mz", mister: "SharpMZ", retropie: "", batocera: "", recalbox: "", retroarch: "", ops2l: "", ps3netsrv: "" }
   - { src: "sharp/x1", mister: "", retropie: "", batocera: "", recalbox: "", retroarch: "", ops2l: "", ps3netsrv: "" }
