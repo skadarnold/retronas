@@ -1,0 +1,71 @@
+- hosts: localhost
+
+  vars:
+    - my_name: "PiForce"
+    - my_file: "install_piforce"
+    - my_service: "piforce"
+    - my_user: "retronas"
+
+    - my_arch: "should only run on a pi, check facts for this at some point"
+
+    # docker stuff
+    - base_image: "python:2"
+    - my_packages: "apt-get -y install git"
+    - my_ports: "80/tcp 23/tcp"
+    - create_user: "useradd -m -s /bin/bash {{ my_user }}"
+    - working_dir: "/home/{{ my_user }}/"
+    - my_command: "{{ working_dir }}/{{ my_file }}.sh"
+
+  tasks:
+
+  - name: "{{ my_name }} - Load RetroNAS config"
+    include_vars: retronas_vars.yml
+
+  #- name: "{{ my_name }} - Install docker"
+  #  import_playbook: install_docker.yml
+
+
+  - name: "{{ my_name }} - prep runtime script"
+    template:
+      src: "{{ my_file }}/{{ my_file }}.sh.j2"
+      dest: /tmp/{{ my_file }}.sh
+      owner: root
+      group: root
+      mode: '0750'
+
+  - name: "{{ my_name }} - prep dockerfile"
+    template:
+      src: templates/build_docker/Dockerfile.j2
+      dest: /tmp/Dockerfile
+      owner: root
+      group: root
+      mode: '0644'
+    
+  - name: "{{ my_name }} - build docker image"
+    command: "/usr/bin/docker build . -t {{ my_name|lower }}:retronas"
+    args:
+      chdir: "/tmp"
+
+  - name: "{{ my_name }} - create startup service(s)"
+    template:
+      src: templates/{{ my_file }}/{{ my_service }}.service.j2
+      dest: /usr/lib/systemd/system/{{ my_service }}.service
+      owner: root
+      group: root
+      mode: 0644
+    notify: "{{ my_name }} - Restart service"
+
+  - name: "{{ my_name }} - enable service(s)"
+    service:
+      name: "{{ my_service }}.service"
+      state: "started"
+      enabled: "yes"
+      daemon_reload: yes
+    notify: "{{ my_name }} - Restart service"
+
+  handlers:
+  - name: "{{ my_name }} - Restart service"
+    service:
+      name: "{{ my_service }}.service"
+      state: restarted
+      daemon_reload: yes

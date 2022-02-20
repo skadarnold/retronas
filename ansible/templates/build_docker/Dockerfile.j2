@@ -1,0 +1,29 @@
+FROM {{ base_image }}
+MAINTAINER retronas
+ARG RNUSER={{ my_user }}
+ARG RNGROUP={{ my_user }}
+
+### Update Image
+#### SKIPPED FOR NOW
+
+### Install packages
+RUN {{ my_packages }}
+
+### Create my user
+RUN {{ create_user }}
+
+### list of ports
+EXPOSE {{ my_ports }}
+
+### copy in the run script
+COPY {{ my_file }}.sh {{ working_dir }}/
+RUN chown {{ my_user }}:{{ my_user }} {{ working_dir }}/{{ my_file }}.sh
+
+
+### drop priv
+USER {{ my_user }}
+
+### switch to dir and exec
+WORKDIR {{ working_dir }}
+
+CMD {{ my_command }}

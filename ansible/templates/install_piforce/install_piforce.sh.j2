@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# this should check if piforce is installed or otherwise get it from git
+
+APP=piforcetools
+BASEDIR=/home/{{ my_user }}
+
+echo "Cloning ${APP}"
+if [ ! -f ${BASEDIR}/.git/config ] 
+then
+    cd ${BASEDIR}
+    git clone https://github.com/travistyoj/${APP}.git
+else 
+    cd ${BASEDIR}/${APP}
+    git pull
+fi
+
+### pip stuff
+pip install smbus
+
+cd ${BASEDIR}/${APP}
+python ${BASEDIR}/${APP}/${APP}.py

@@ -1,0 +1,35 @@
+- hosts: localhost
+
+  vars:
+    - my_name: "Docker"
+    - my_file: "install_docker"
+
+    - my_script: "/opt/get-docker.sh"
+    - my_sha512: "aac73f89d658f24c7a3a83f94575daa4e2745de609e4ef3de0f9ddab3c87df2c0aa0db42d8abbe9d2287d247a2d3c979d57ff3404f71e6fca593792a151b051b"
+
+  tasks:
+
+  - name: "{{ my_name }} - Load RetroNAS config"
+    include_vars: retronas_vars.yml
+    
+  - name: "{{ my_name }} - install gnupg for keys"
+    apt:
+       name: "{{ item }}"
+       state: latest
+    with_items:
+      - gnupg
+
+  - name: "{{ my_name }} - get docker installer"
+    get_url: 
+      url: "https://get.docker.com"
+      dest: "{{ my_script }}"
+      checksum: sha512:{{ my_sha512 }}
+      mode: "0700"
+    register: download_ok
+
+  - name: "{{ my_name }} - install docker"
+    command:
+      cmd: "{{ my_script }}"
+      creates: "/usr/bin/docker"
+    when:
+      - download_ok.failed == false  

@@ -1,0 +1,14 @@
+[Unit]
+Description=Piforce Tools v1.1
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+RestartSec=2
+Restart=always
+ExecStart=/usr/bin/docker run --rm --name {{ my_service }} {{ my_service }}:retronas
+ExecStop=/usr/bin/docker stop {{ my_service }}
+
+[Install]
+WantedBy=multi-user.target
