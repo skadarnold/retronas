@@ -404,7 +404,6 @@ DLG_MENU() {
     local MENU_H=$3
     local MENU_BLURB=$4
 
-
     local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
 
     DIALOG=(dialog \
