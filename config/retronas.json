@@ -977,7 +977,17 @@
                     "type": "dialog_yn",
                     "group":"",
                     "command": "romimport"
-                }
+                },
+                {   
+                    "index":"05",
+                    "title": "litch",
+                    "description": "Download your itchio purchases",
+                    "id":"litch-menu",
+                    "prompt": "Open",
+                    "type": "dialog",
+                    "group":"",
+                    "command": "litch"
+                }   
             ]
         },
         "update": 
@@ -1501,7 +1511,7 @@
                     "description": "Configure your itch.io credentials",
                     "id":"litch-login",
                     "prompt": "",
-                    "type": "",
+                    "type": "script",
                     "group":"litch",
                     "command": "litch_login"
                 },
