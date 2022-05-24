@@ -48,7 +48,7 @@
   - name: "{{ my_name }} - create startup service"
     template:
       src: templates/{{ my_file }}/etherdfs.service.j2
-      dest: /usr/lib/systemd/system/etherdfs.service
+      dest: /etc/systemd/system/etherdfs.service
       owner: root
       group: root
       mode: 0644
