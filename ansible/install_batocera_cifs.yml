@@ -1,3 +1,8 @@
+# Dependencies
+- import_playbook: install_samba.yml
+- import_playbook: install_romdir.yml
+- import_playbook: install_extradirs.yml
+
 - hosts: localhost
 
   vars:
@@ -8,6 +13,9 @@
       - { name: "ROMS", enabled: "yes",  generic: "roms", systems: "yes" }
       - { name: "SAVES", enabled: "yes",  generic: "saves", systems: "yes"  }
       - { name: "BIOS", enabled: "yes",  generic: "bios", systems: "yes"  }
+
+    - internal_symlinks:
+      - { src: 'sega/megadrive', dest: 'msu-md' }
 
   tasks:
 
@@ -21,7 +29,7 @@
     file:
       path: "{{ retronas_path }}/batocera"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: directory
       mode: "0775"
     notify: "{{ my_name }} - Restart service"
@@ -37,7 +45,7 @@
     file:
       path: "{{ retronas_path }}/batocera/{{ item.name }}"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: directory
       mode: "0775"
     with_items:
@@ -51,7 +59,7 @@
       src: "../../{{ item.1.generic|lower }}/{{ item.0.src }}"
       dest: "{{ retronas_path }}/batocera/{{ item.1.name }}/{{ item.0.batocera }}"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: link
     with_nested:
       - "{{ system_map }}"
@@ -60,6 +68,17 @@
       - item.1.enabled == "yes"
       - item.0.batocera | length > 0
       - item.1.systems == "yes"
+    notify: "{{ my_name }} - Restart service"
+
+  - name: "{{ my_name }} - build internal hacks directory layout"
+    file:
+      src: "../roms/{{ item.src }}"
+      dest: "{{ retronas_path }}/batocera/{{ item.dest }}"
+      owner: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
+      state: link
+    with_items:
+      - "{{ internal_symlinks }}"
     notify: "{{ my_name }} - Restart service"
 
   - name: "{{ my_name }} - configure includes file"
@@ -88,3 +107,8 @@
     with_items:
       - smbd
       - nmbd
+
+- import_playbook: retronas_system_config.yml
+  vars:
+    module_name: "batocera_cifs"
+    module_state: "present"

@@ -1,3 +1,6 @@
+# Dependencies
+- import_playbook: install_romdir.yml
+
 - hosts: localhost
 
   vars:
@@ -47,7 +50,7 @@
     file:
       path: "{{ retronas_path }}/gamecube/swiss/{{ item }}"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: directory
       mode: "0775"
     with_items: "{{ swiss_dirs }}"
@@ -58,7 +61,7 @@
       src: "../../roms/{{ item.src }}"
       dest: "{{ retronas_path }}/gamecube/swiss/{{ item.fspd }}"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: link
     with_items: "{{ system_nintendo }}"
     when:
@@ -93,7 +96,7 @@
       dest: "{{ retronas_path }}/gamecube/swiss/{{ item }}"
       force: no
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       mode: 0644
     with_items: "{{ swiss_rw }}"
 
@@ -103,7 +106,7 @@
       dest: "{{ retronas_path }}/gamecube/swiss/swiss/{{ item }}"
       force: no
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       mode: 0644
     with_items: "{{ swiss_rw }}"
 
@@ -133,4 +136,7 @@
       daemon_reload: yes
     with_items: "{{ my_service }}"
 
-    
+- import_playbook: retronas_system_config.yml
+  vars:
+    module_name: "fsp"
+    module_state: "present"

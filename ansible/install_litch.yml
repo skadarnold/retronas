@@ -28,7 +28,7 @@
     file:
       path: "{{ retronas_path }}/{{ item }}"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       mode: "0775"
       state: directory
     with_items:
@@ -53,3 +53,8 @@
       group: root
       mode: 0755
     with_items: "{{ scripts }}"
+
+- import_playbook: retronas_system_config.yml
+  vars:
+    module_name: "litch"
+    module_state: "present"

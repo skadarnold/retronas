@@ -60,6 +60,7 @@ else
   echo "Config file missing, creating it"
   cp "${ANCFG}.default" "${ANCFG}"
 fi
+source $_CONFIG
 
 # check if apt was updated in the last 24 hours
 if find /var/cache/apt -maxdepth 1 -type f -mtime -1 -exec false {} +
@@ -69,14 +70,30 @@ then
 fi
 
 #
-# DEPENDENCIES
+# MIGRATIONS
 #
+# added retronas_group
+if [ -z "${OLDRNGROUP}" ]
+then
+  grep "retronas_group" ${ANCFG}
+  if [ $? -ne 0 ]
+  then
+    echo "retronas_group: \"${OLDRNUSER}\"" >> ${ANCFG}
+  else
+    sed -i "s/retronas_group:.*/retronas_group: \"${OLDRNUSER}\"/" ${ANCFG}
+  fi
+fi
+
+
 # jq, kept here to handle migration to new menu system
 if [ ! -f /usr/bin/jq ] 
 then
   apt-get -y install jq
   [ $? -ne 0 ] && PAUSE && EXIT_CANCEL
 fi
+#
+# END MIGRATIONS
+#
 
 ### source the config to update vars on first run
 source $_CONFIG
@@ -92,6 +109,16 @@ then
   cd $DIDIR
   bash d_input.sh update-user
 fi
+
+### check default group exists
+getent group $OLDRNGROUP &>/dev/null
+if [ $? -ne 0 ]
+then
+  echo -e "Group $OLDRNGROUP does not exist on this system\n opening the group config dialog"
+  cd $DIDIR
+  bash d_input.sh update-group
+fi
+
 
 ### Manage install through git
 if [ $DISABLE_GITOPS -eq 0 ] && [ ! -f ${USER_CONFIG}/disable_gitops ]

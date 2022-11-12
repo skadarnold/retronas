@@ -182,6 +182,9 @@ READ_MENU_COMMAND() {
             service_start)
                 RN_SYSTEMD_START "${MENU_SELECT}"
                 ;;
+            service_restart)
+                RN_SYSTEMD_RESTART "${MENU_SELECT}"
+                ;;
             service_stop)
                 RN_SYSTEMD_STOP "${MENU_SELECT}"
                 ;;
@@ -292,7 +295,7 @@ RN_SERVICE_STATUS() {
     CLEAR
     echo "${CMD}"
     echo ; $CMD ; echo
-    PAUSE
+    #PAUSE
 }
 
 #
@@ -300,6 +303,7 @@ RN_SERVICE_STATUS() {
 #
 RN_SYSTEMD_STATUS() {
     RN_SYSTEMD "${1}" "status"
+    PAUSE
 }
 
 #
@@ -307,6 +311,13 @@ RN_SYSTEMD_STATUS() {
 #
 RN_SYSTEMD_START() {
     RN_SYSTEMD "${1}" "enable"
+    RN_SYSTEMD "${1}" "restart"
+}
+
+#
+# SYSTEMD restart
+#
+RN_SYSTEMD_RESTART() {
     RN_SYSTEMD "${1}" "restart"
 }
 
@@ -365,11 +376,11 @@ DLG_MENUJ() {
     local MENU_BLURB=$3
 
 
-    local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
+    local MENU_DESC="${IPADDMSG}${MENU_BLURB}"
 
     DIALOG=(dialog \
-            --backtitle "RetroNAS" \
-            --title "RetroNAS ${TITLE} Menu" \
+            --backtitle "${APPNAME}" \
+            --title "${APPNAME} ${TITLE} Menu" \
             --clear \
             --menu "$MENU_DESC" ${MW} ${MH} ${MENU_H})
 
@@ -404,11 +415,11 @@ DLG_MENU() {
     local MENU_H=$3
     local MENU_BLURB=$4
 
-    local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
+    local MENU_DESC="${IPADDMSG}${MENU_BLURB}"
 
     DIALOG=(dialog \
-            --backtitle "RetroNAS" \
-            --title "RetroNAS ${TITLE} Menu" \
+            --backtitle "${APPNAME}" \
+            --title "${APPNAME} ${TITLE} Menu" \
             --clear \
             --menu "$MENU_DESC" ${MW} ${MH} ${MENU_H})
 
@@ -424,11 +435,11 @@ DLG_YN() {
     local TITLE="$1"
     local MENU_BLURB=$2
 
-    local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
+    local MENU_DESC="${IPADDMSG}${MENU_BLURB}"
 
     DIALOG=(dialog \
-    --backtitle "RetroNAS" \
-    --title "RetroNAS ${TITLE} Menu" \
+    --backtitle "${APPNAME}" \
+    --title "${APPNAME} ${TITLE} Menu" \
     --clear \
     --defaultno \
     --yesno "${MENU_DESC}" ${MW} ${MH})
@@ -446,11 +457,11 @@ DLG_DSELECT() {
     local TITLE="$1"
     local MENU_BLURB=$2
 
-    local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
+    local MENU_DESC="${IPADDMSG}${MENU_BLURB}"
 
     DIALOG=(dialog \
-    --backtitle "RetroNAS" \
-    --title "RetroNAS ${TITLE} Menu" \
+    --backtitle "${APPNAME}" \
+    --title "${APPNAME} ${TITLE} Menu" \
     --clear \
     --dselect "${MENU_BLURB}" ${MW} ${MH})
 
@@ -467,11 +478,11 @@ DLG_INPUTBOX() {
     local MENU_BLURB=$2
     local MENU_INIT=$3
 
-    local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
+    local MENU_DESC="${IPADDMSG}${MENU_BLURB}"
 
     DIALOG=(dialog \
-    --backtitle "RetroNAS" \
-    --title "RetroNAS ${TITLE} Menu" \
+    --backtitle "${APPNAME}" \
+    --title "${APPNAME} ${TITLE} Menu" \
     --clear \
     --inputbox "${MENU_BLURB}" ${MW} ${MH} $MENU_INIT)
 
@@ -489,11 +500,11 @@ DLG_PASSWORD() {
     local MENU_H=$3
     local MENU_BLURB=$4
 
-    local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
+    local MENU_DESC="${IPADDMSG}${MENU_BLURB}"
 
     DIALOG=(dialog \
-        --backtitle "RetroNAS" \
-        --title "RetroNAS password menu" \
+        --backtitle "${APPNAME}" \
+        --title "${APPNAME} ${TITLE} Menu" \
         --clear \
         --insecure \
         --passwordform "\n$MENU_DESC" ${MW} ${MH} ${MENU_H})
@@ -513,11 +524,11 @@ DLG_FORM() {
     local MENU_H=$3
     local MENU_BLURB=$4
 
-    local MENU_DESC="My IP addresses: ${MY_IPS}\n\n${MENU_BLURB}"
+    local MENU_DESC="${IPADDMSG}${MENU_BLURB}"
 
     DIALOG=(dialog \
-        --backtitle "RetroNAS" \
-        --title "RetroNAS password menu" \
+        --backtitle "${APPNAME}" \
+        --title "${APPNAME} ${TITLE} Menu" \
         --clear \
         --form "\n$MENU_DESC" ${MW} ${MH} ${MENU_H})
 

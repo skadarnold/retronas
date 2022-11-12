@@ -1,3 +1,8 @@
+# Dependencies
+- import_playbook: install_samba.yml
+- import_playbook: install_romdir.yml
+- import_playbook: install_extradirs.yml
+
 - hosts: localhost
 
   vars:
@@ -21,7 +26,7 @@
     file:
       path: "{{ retronas_path }}/recalbox"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: directory
       mode: "0775"
     notify: "{{ my_name }} - Restart service"
@@ -37,7 +42,7 @@
     file:
       path: "{{ retronas_path }}/recalbox/{{ item.name }}"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: directory
       mode: "0775"
     with_items:
@@ -51,7 +56,7 @@
       src: "../../{{ item.1.generic|lower }}/{{ item.0.src }}"
       dest: "{{ retronas_path }}/recalbox/{{ item.1.name }}/{{ item.0.recalbox }}"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: link
     with_nested:
       - "{{ system_map }}"
@@ -88,3 +93,8 @@
     with_items:
       - smbd
       - nmbd
+
+- import_playbook: retronas_system_config.yml
+  vars:
+    module_name: "recalbox_cifs"
+    module_state: "present"

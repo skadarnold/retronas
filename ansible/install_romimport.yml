@@ -9,6 +9,10 @@
   - name: "{{ my_name }} - Load RetroNAS config"
     include_vars: retronas_vars.yml
 
+
+  - name: "{{ my_name }} - Load RetroNAS Systems"
+    include_vars: retronas_systems.yml
+
   - name: "{{ my_name }} - Install build tools"
     apt:
        name: "{{ item }}"
@@ -21,7 +25,7 @@
     file:
       path: "{{ retronas_path }}/romimport"
       owner: "{{ retronas_user }}"
-      group: "{{ retronas_user }}"
+      group: "{{ retronas_group }}"
       state: directory
       mode: "0775"
 
@@ -43,3 +47,8 @@
     shell: "chown -R {{ retronas_user}}:{{ retronas_user }} Hardware-Target-Game-Database"
     args:
       chdir: "{{ retronas_root}}/bin"
+
+- import_playbook: retronas_system_config.yml
+  vars:
+    module_name: "romimport"
+    module_state: "present"
